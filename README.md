@@ -55,7 +55,7 @@ Content-Type: application/json
 
 ### Introdução
 
-O Visual Studio Code oferece diversas extensões para melhorar a produtividade do desenvolvimento, incluindo a extensão REST Client. Essa extensão permite enviar e receber requisições HTTP para testar e explorar APIs diretamente da IDE, substituindo postman ou insomnia.
+O Visual Studio Code oferece diversas extensões para melhorar a produtividade do desenvolvimento, incluindo a extensão REST Client. Essa extensão permite enviar e receber requisições HTTP para testar e explorar APIs diretamente da IDE, substituindo postman ou insomnia. O arquivo resquest.rest faz as requisições, clicar em send acima dos métodos, depois de instalar a extensão.
 
 ### Instalação e Configuração
 
