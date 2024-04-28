@@ -1,7 +1,5 @@
 ## [Backend] Desafio Autodidata - Potência Tech
 
-### GET /users
-
 **Description:** 
 
 Esta é uma API Node.js para gerenciar registros e logins de usuários. Ela fornece funcionalidades para:
