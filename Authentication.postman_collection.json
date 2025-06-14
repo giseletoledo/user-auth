@@ -1,0 +1,114 @@
+{
+	"info": {
+		"_postman_id": "7d83a4f4-2521-4105-879c-f446a467eafa",
+		"name": "Authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10265749",
+		"_collection_link": "https://mmm555-7181.postman.co/workspace/%255BBackend%255D-Desafio-Autodidata---~6ef15174-8e0d-4c1f-87b6-b0efd6afdd7a/collection/10265749-7d83a4f4-2521-4105-879c-f446a467eafa?action=share&source=collection_link&creator=10265749"
+	},
+	"item": [
+		{
+			"name": "sign in",
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "secret",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9hbmEgZGEgU2lsdmEiLCJlbWFpbCI6ImpvYW5hQGVtYWlsLmNvbSIsImlhdCI6MTc0OTkyOTE1MiwiZXhwIjoxNzQ5OTMyNzUyfQ.ePzhjt3uFnXqBc2UbSmJPca9PMYpJM7QfDJCdZhbxqU",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "payload",
+							"value": "{}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "Bearer",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"joana@email.com\",\n  \"password\": \"Senha@123\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/signin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"signin"
+					]
+				},
+				"description": "## Sign In Endpoint\n\nThis endpoint allows users to authenticate by signing in with their credentials.\n\n### Request\n\n- **Method:** POST\n    \n- **URL:** `http://localhost:3000/signin`\n    \n\n#### Request Body\n\nThe request must include the following parameters in JSON format:\n\n- `email` (string): The email address of the user attempting to sign in.\n    \n- `password` (string): The password associated with the user's account.\n    \n\nExample of request body:\n\n``` json\n{\n  \"email\": \"user@example.com\",\n  \"password\": \"userPassword\"\n}\n\n ```\n\n### Response\n\nOn successful authentication, the server responds with a JSON object containing:\n\n- `status`: A status message indicating the result of the authentication attempt.\n    \n- `data`: An object containing:\n    \n    - `tokenJWT`: A JSON Web Token (JWT) that can be used for subsequent authenticated requests.\n        \n    - `user`: An object with user information, including:\n        \n        - `name`: The name of the authenticated user.\n            \n        - `email`: The email address of the authenticated user.\n            \n\nExample of response:\n\n``` json\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"tokenJWT\": \"your_jwt_token_here\",\n    \"user\": {\n      \"name\": \"User Name\",\n      \"email\": \"user@example.com\"\n    }\n  }\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "sign up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Joana da Silva\",\n  \"email\": \"joana@email.com\",\n  \"password\": \"Senha@123\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"signup"
+					]
+				},
+				"description": "## Signup Endpoint\n\nThis endpoint allows users to create a new account by submitting their registration details.\n\n### Request\n\n- **Method**: POST\n    \n- **URL**: `http://localhost:3000/signup`\n    \n\n#### Request Body\n\nThe request body must be in JSON format and include the following parameters:\n\n- `name` (string): The full name of the user.\n    \n- `email` (string): The email address of the user. This will be used for account verification and login.\n    \n- `password` (string): The password for the user's account. It should follow security best practices.\n    \n\n**Example Request Body:**\n\n``` json\n{\n  \"name\": \"Your Name\",\n  \"email\": \"your.email@example.com\",\n  \"password\": \"YourSecurePassword\"\n}\n\n ```\n\n### Response\n\nUpon successful account creation, the server will respond with a status code of `201 Created` and a JSON object containing:\n\n- `status` (string): The status of the request (usually empty on success).\n    \n- `data` (object): An object containing:\n    \n    - `message` (string): A message indicating the result of the signup process (usually empty on success).\n        \n    - `tokenJWT` (string): A JSON Web Token that can be used for authentication in subsequent requests.\n        \n\n**Example Response:**\n\n``` json\n{\n  \"status\": \"\",\n  \"data\": {\n    \"message\": \"\",\n    \"tokenJWT\": \"your.jwt.token\"\n  }\n}\n\n ```\n\n### Notes\n\n- Ensure that the email provided is unique and not already associated with an existing account.\n    \n- The password must meet the security requirements set by the application.\n    \n- The returned JWT token can be used for authenticating future requests to protected endpoints."
+			},
+			"response": []
+		}
+	]
+}
