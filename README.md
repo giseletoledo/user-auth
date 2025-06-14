@@ -1,5 +1,7 @@
 ## [Backend] Desafio Autodidata - Potência Tech
 
+- 14/12/2025 - upgrade para typescript e adicionadas boas práticas de segurança com helmet e dotenv.
+
 **Description:** 
 
 Esta é uma API Node.js para gerenciar registros e logins de usuários. Ela fornece funcionalidades para:
