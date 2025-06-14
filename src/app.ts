@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction, Application } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import helmet from 'helmet';
@@ -25,31 +25,41 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// Simulação de um banco de dados em memória
 const users: User[] = [];
 
-const authenticateJWT = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const authenticateJWT = (
+  req: Request & { user?: { email: string; name: string } },
+  res: Response,
+  next: NextFunction
+): void => {
   const authHeader = req.headers.authorization;
-  
+
   if (authHeader?.startsWith('Bearer ')) {
     const token = authHeader.split(' ')[1];
-    
+
     jwt.verify(token, JWT_SECRET, (err, user) => {
-      if (err) return responseHandler.handleError(res, 'Token inválido', 401);
+      if (err) {
+        responseHandler.handleError(res, 'Token inválido', 401);
+        return;
+      }
+      
       req.user = user as { email: string; name: string };
       next();
     });
   } else {
-    return responseHandler.handleError(res, 'Autenticação necessária', 401);
+    responseHandler.handleError(res, 'Autenticação necessária', 401);
   }
 };
 
-app.post('/signup', async (req, res) => {
+app.post('/signup', async (req: Request, res: Response) => {
   try {
     const validatedData = UserSchema.parse(req.body);
     const { name, email, password } = validatedData;
 
     if (users.some(user => user.email === email)) {
-      return responseHandler.handleError(res, 'Usuário já cadastrado', 409);
+      responseHandler.handleError(res, 'Usuário já cadastrado', 409);
+      return; 
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -57,13 +67,13 @@ app.post('/signup', async (req, res) => {
 
     const token = jwt.sign({ name, email }, JWT_SECRET, { expiresIn: '1h' });
 
-    return responseHandler.handleSuccess(res, {
+    responseHandler.handleSuccess(res, {
       message: 'Cadastro realizado com sucesso',
       tokenJWT: token
     }, 201);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return responseHandler.handleError(
+      responseHandler.handleError(
         res, 
         'Dados inválidos', 
         400, 
@@ -72,29 +82,32 @@ app.post('/signup', async (req, res) => {
           message: err.message
         }))
       );
+      return;
     }
     console.error('Erro ao criar usuário:', error);
-    return responseHandler.handleError(res, 'Erro ao criar usuário', 500);
+    responseHandler.handleError(res, 'Erro ao criar usuário', 500);
   }
 });
 
-app.post('/signin', async (req, res) => {
+app.post('/signin', async (req: Request, res: Response) => {
   try {
     const { email, password } = LoginSchema.parse(req.body);
     const user = users.find(user => user.email === email);
     
     if (!user) {
-      return responseHandler.handleError(res, 'Usuário não encontrado', 404);
+      responseHandler.handleError(res, 'Usuário não encontrado', 404);
+      return; 
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return responseHandler.handleError(res, 'Login inválido', 401);
+      responseHandler.handleError(res, 'Login inválido', 401);
+      return;
     }
 
     const token = jwt.sign({ email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '1h' });
 
-    return responseHandler.handleSuccess(res, {
+    responseHandler.handleSuccess(res, {
       tokenJWT: token,
       user: {
         name: user.name,
@@ -103,7 +116,7 @@ app.post('/signin', async (req, res) => {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return responseHandler.handleError(
+      responseHandler.handleError(
         res, 
         'Dados inválidos', 
         400, 
@@ -112,14 +125,15 @@ app.post('/signin', async (req, res) => {
           message: err.message
         }))
       );
+      return; 
     }
     console.error('Erro ao realizar login:', error);
-    return responseHandler.handleError(res, 'Erro ao realizar login', 500);
+    responseHandler.handleError(res, 'Erro ao realizar login', 500);
   }
 });
 
-app.get('/users', authenticateJWT, (req, res) => {
-  return responseHandler.handleSuccess(
+app.get('/users', authenticateJWT, (req: Request, res: Response) => {
+  responseHandler.handleSuccess(
     res, 
     users.map(u => ({ name: u.name, email: u.email }))
   );
