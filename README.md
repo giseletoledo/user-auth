@@ -1,6 +1,6 @@
 ## [Backend] Desafio Autodidata - Potência Tech
 
-- 14/12/2025 - upgrade para typescript e adicionadas boas práticas de segurança com helmet e dotenv.
+- 14/06/2025 - upgrade para typescript e adicionadas boas práticas de segurança com helmet e dotenv.
 
 **Description:** 
 
